@@ -1,10 +1,33 @@
 import * as d3 from 'd3';
-interface DeepObject {
-  [key: string]: string | number | boolean | null | DeepObject | DeepObject[];
+
+interface LeafNode {
+  [key: string]: number;
 }
 
-const generateLargeHierarchicalData = (generatedYears: number) => {
-  const getMonth = (monthNumber: number) => {
+interface BranchNode {
+  [key: string]: LeafNode[];
+}
+
+interface QuarterNode {
+  [key: string]: BranchNode[];
+}
+
+interface YearNode {
+  [key: string]: QuarterNode[];
+}
+
+interface RootData {
+  Total: YearNode[];
+}
+
+interface HierarchyNode {
+  name: string;
+  children?: HierarchyNode[];
+  value?: number;
+}
+
+const generateLargeHierarchicalData = (generatedYears: number): RootData => {
+  const getMonth = (monthNumber: number): string => {
     const months = [
       'Unk',
       'Jan',
@@ -23,27 +46,27 @@ const generateLargeHierarchicalData = (generatedYears: number) => {
     return months[monthNumber] || 'Unk';
   };
 
-  const data = {
+  const data: RootData = {
     Total: [],
   };
 
   for (let y = 1; y <= generatedYears; y++) {
-    const master = {
+    const master: YearNode = {
       [`Year ${1973 + y}`]: [],
     };
 
     for (let q = 1; q <= 4; q++) {
-      const branchL1 = {
+      const branchL1: QuarterNode = {
         [`Q${q}`]: [],
       };
 
       for (let m = 1; m <= 3; m++) {
-        const branchL2 = {
+        const branchL2: BranchNode = {
           [`${getMonth(m + (q - 1) * 3)}`]: [],
         };
 
         for (let d = 1; d <= 4; d++) {
-          const leaf = {
+          const leaf: LeafNode = {
             [`w${d}`]: 1.1,
           };
 
@@ -62,33 +85,40 @@ const generateLargeHierarchicalData = (generatedYears: number) => {
   return data;
 };
 
-// Function to extract children dynamically
-const getChildren = (node) => {
-  if (Array.isArray(node)) {
-    // If it's an array, extract each object inside
-    return node.map((obj) => {
-      const key = Object.keys(obj)[0];
-      const value = obj[key];
+export const generateData = (generatedYears: number): d3.HierarchyNode<HierarchyNode> => {
+  const rootData: HierarchyNode = {
+    name: 'Total',
+    children: generateLargeHierarchicalData(generatedYears).Total.map(year => {
+      const yearKey = Object.keys(year)[0];
+      return {
+        name: yearKey,
+        children: year[yearKey].map(quarter => {
+          const quarterKey = Object.keys(quarter)[0];
+          return {
+            name: quarterKey,
+            children: quarter[quarterKey].map(month => {
+              const monthKey = Object.keys(month)[0];
+              return {
+                name: monthKey,
+                children: month[monthKey].map(leaf => {
+                  const leafKey = Object.keys(leaf)[0];
+                  return {
+                    name: leafKey,
+                    value: leaf[leafKey]
+                  };
+                })
+              };
+            })
+          };
+        })
+      };
+    })
+  };
 
-      if (Array.isArray(value)) {
-        return { name: key, children: value }; // Recursive case
-      } else {
-        return { name: key, value: value }; // Leaf node with numerical value
-      }
-    });
-  } else if (typeof node === 'object' && node !== null) {
-    // If it's an object, process it (should not happen at root level)
-    const key = Object.keys(node)[0];
-    return [{ name: key, children: node[key] }];
-  }
-  return null; // Leaf node (numerical values)
-};
-
-export const generateData = (generatedYears: number) => {
   const root = d3.hierarchy(
-    { name: 'Total', children: generateLargeHierarchicalData(generatedYears).Total }, // Root node
-    (node: { children }) => {
-      if (node.children) return getChildren(node.children); // Process children recursively
+    rootData,
+    (node: HierarchyNode) => {
+      if (node.children) return node.children;
       return null;
     },
   );

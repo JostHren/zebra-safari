@@ -7,6 +7,8 @@ interface TableSettingsProps {
   setYears: (years: number) => void;
   padding: number;
   setPadding: (padding: number) => void;
+  nodeSign: string;
+  setNodeSign: (node: string) => void;
 }
 
 export const TableSettings = ({
