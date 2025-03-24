@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { HierarchicalTable } from './components/HierarchicalTable/HierarchicalTable';
+import { TableSettings } from './components/TableSettings/TableSettings';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './components/ui/card';
 
 export const App = () => {
@@ -15,7 +16,16 @@ export const App = () => {
             <CardTitle>Settings</CardTitle>
             <CardDescription>Style Table Here</CardDescription>
           </CardHeader>
-          <CardContent>Content Here</CardContent>
+          <CardContent>
+            <TableSettings
+              showTotal={showTotal}
+              setShowTotal={setShowTotal}
+              years={years}
+              setYears={setYears}
+              padding={padding}
+              setPadding={setPadding}
+            />
+          </CardContent>
         </Card>
 
         <Card className='basis-2/4'>
