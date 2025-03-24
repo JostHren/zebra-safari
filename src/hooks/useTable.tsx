@@ -41,6 +41,32 @@ export const useTable = ({
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updateAllChildNodes = (parentNode: d3.HierarchyNode<HierarchyNodeData>) => {
+    // Get all leaf nodes under this parent
+    const leafNodes: d3.HierarchyNode<HierarchyNodeData>[] = [];
+    const collectLeafNodes = (node: d3.HierarchyNode<HierarchyNodeData>) => {
+      if (!node.children) {
+        leafNodes.push(node);
+      } else {
+        node.children.forEach(collectLeafNodes);
+      }
+    };
+    collectLeafNodes(parentNode);
+
+    // Cycle through states for all leaf nodes
+    leafNodes.forEach((leafNode) => {
+      if (leafNode.data.state === 0) {
+        leafNode.data.state = 2;
+      } else if (leafNode.data.state === 2) {
+        leafNode.data.state = 1;
+      } else {
+        leafNode.data.state = 0;
+      }
+      updateValues(leafNode);
+    });
+  };
+
   // Compute initial values for branches
   computeBranchValues(root);
 
@@ -52,15 +78,15 @@ export const useTable = ({
         .filter((d) => d === node)
         .select('.value-cell')
         .text((node.data.value ?? 0).toString())
-        .classed('text-red-500', node.data.state === 2)
-        .classed('text-gray-300', node.data.state === 1);
+        .classed('text-red-500', node.data.state === 1)
+        .classed('text-gray-300', node.data.state === 2);
 
       // Apply styling for excluded values
       d3.selectAll('tr')
         .filter((d) => d === node)
         .select('.leaf')
-        .classed('text-red-500 before:content-["-_"]', node.data.state === 2)
-        .classed('text-gray-300', node.data.state === 1);
+        .classed('text-red-500 before:content-["-_"]', node.data.state === 1)
+        .classed('text-gray-300', node.data.state === 2);
 
       // Recursively update parent values
       let parent = node.parent;
@@ -85,9 +111,9 @@ export const useTable = ({
     // Function to cycle leaf values (Original → Inverted → Excluded)
     const cycleValue = (node: d3.HierarchyNode<HierarchyNodeData>) => {
       if (node.data.state === 0) {
-        node.data.state = 1;
-      } else if (node.data.state === 1) {
         node.data.state = 2;
+      } else if (node.data.state === 2) {
+        node.data.state = 1;
       } else {
         node.data.state = 0;
       }
@@ -131,7 +157,7 @@ export const useTable = ({
         .text((d) => (d.children ? `${nodeSign} ${d.data.name}` : d.data.name))
         .on('click', function (_event, d) {
           if (d.children) {
-            //do nothing
+            updateAllChildNodes(d);
           } else {
             cycleValue(d);
           }
@@ -168,7 +194,7 @@ export const useTable = ({
     return () => {
       d3.select(tableRef.current).selectAll('tr').remove();
     };
-  }, [decimalPlaces, nodeSign, paddingSize, root, showTotal, updateValues]);
+  }, [decimalPlaces, nodeSign, paddingSize, root, showTotal, updateAllChildNodes, updateValues]);
 
   return { tableRef };
 };
