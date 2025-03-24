@@ -1,44 +1,38 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from './components/ui/card';
+import { useState } from 'react';
+import { HierarchicalTable } from './components/HierarchicalTable/HierarchicalTable';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './components/ui/card';
 
-function App() {
+export const App = () => {
+  const [showTotal, setShowTotal] = useState(true);
+  const [years, setYears] = useState(200);
+  const [padding, setPadding] = useState(200);
+
   return (
     <>
       <div className='width-full height-full flex justify-center gap-2 p-4'>
         <Card className='basis-1/4'>
           <CardHeader>
             <CardTitle>Settings</CardTitle>
-            <CardDescription>Settings Description</CardDescription>
+            <CardDescription>Style Table Here</CardDescription>
           </CardHeader>
-          <CardContent>
-            <p>Settings Content</p>
-          </CardContent>
-          <CardFooter>
-            <p>Settings Footer</p>
-          </CardFooter>
+          <CardContent>Content Here</CardContent>
         </Card>
 
         <Card className='basis-2/4'>
           <CardHeader>
             <CardTitle>Table</CardTitle>
-            <CardDescription>Table Description</CardDescription>
+            <CardDescription>Hierarchical table</CardDescription>
           </CardHeader>
           <CardContent>
-            <p>Table Content</p>
+            <HierarchicalTable
+              key={'true'}
+              showTotal={showTotal}
+              yearsGenerated={years}
+              paddingSize={padding}
+            />
           </CardContent>
-          <CardFooter>
-            <p>Table Footer</p>
-          </CardFooter>
         </Card>
       </div>
     </>
   );
-}
-
-export default App;
+};
