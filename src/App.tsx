@@ -8,6 +8,7 @@ export const App = () => {
   const [years, setYears] = useState(1);
   const [padding, setPadding] = useState(20);
   const [nodeSign, setNodeSign] = useState('⌵ ');
+  const [decimal, setDecimal] = useState(1);
 
   return (
     <>
@@ -27,6 +28,8 @@ export const App = () => {
               setPadding={setPadding}
               nodeSign={nodeSign}
               setNodeSign={setNodeSign}
+              decimal={decimal}
+              setDecimal={setDecimal}
             />
           </CardContent>
         </Card>
@@ -43,6 +46,7 @@ export const App = () => {
               yearsGenerated={years}
               paddingSize={padding}
               nodeSign={nodeSign}
+              decimalPlaces={decimal}
             />
           </CardContent>
         </Card>

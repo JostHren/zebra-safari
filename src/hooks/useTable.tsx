@@ -123,7 +123,7 @@ export const useTable = ({
       newRows
         .append('td')
         .attr('class', (d) => (d.children ? 'toggle' : 'leaf'))
-        .style('padding-left', (d) => `${d.depth * paddingSize}px`)
+        .style('padding-left', (d) => `${(d.depth - (showTotal ? 0 : 1)) * paddingSize}px`)
         .style('text-align', 'left')
         .style('font-weight', (d) => (d.height !== 0 ? 'bold' : 'normal'))
         .style('cursor', 'pointer')

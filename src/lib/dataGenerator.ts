@@ -67,7 +67,7 @@ const generateLargeHierarchicalData = (generatedYears: number): RootData => {
 
         for (let d = 1; d <= 4; d++) {
           const leaf: LeafNode = {
-            [`w${d}`]: 1.1,
+            [`w${d}`]: Number((Math.random() + 1).toFixed(2)),
           };
 
           branchL2[`${getMonth(m + (q - 1) * 3)}`].push(leaf);
@@ -88,39 +88,36 @@ const generateLargeHierarchicalData = (generatedYears: number): RootData => {
 export const generateData = (generatedYears: number): d3.HierarchyNode<HierarchyNode> => {
   const rootData: HierarchyNode = {
     name: 'Total',
-    children: generateLargeHierarchicalData(generatedYears).Total.map(year => {
+    children: generateLargeHierarchicalData(generatedYears).Total.map((year) => {
       const yearKey = Object.keys(year)[0];
       return {
         name: yearKey,
-        children: year[yearKey].map(quarter => {
+        children: year[yearKey].map((quarter) => {
           const quarterKey = Object.keys(quarter)[0];
           return {
             name: quarterKey,
-            children: quarter[quarterKey].map(month => {
+            children: quarter[quarterKey].map((month) => {
               const monthKey = Object.keys(month)[0];
               return {
                 name: monthKey,
-                children: month[monthKey].map(leaf => {
+                children: month[monthKey].map((leaf) => {
                   const leafKey = Object.keys(leaf)[0];
                   return {
                     name: leafKey,
-                    value: leaf[leafKey]
+                    value: leaf[leafKey],
                   };
-                })
+                }),
               };
-            })
+            }),
           };
-        })
+        }),
       };
-    })
+    }),
   };
 
-  const root = d3.hierarchy(
-    rootData,
-    (node: HierarchyNode) => {
-      if (node.children) return node.children;
-      return null;
-    },
-  );
+  const root = d3.hierarchy(rootData, (node: HierarchyNode) => {
+    if (node.children) return node.children;
+    return null;
+  });
   return root;
 };

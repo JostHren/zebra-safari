@@ -9,6 +9,8 @@ interface TableSettingsProps {
   setPadding: (padding: number) => void;
   nodeSign: string;
   setNodeSign: (node: string) => void;
+  decimal: number;
+  setDecimal: (decimal: number) => void;
 }
 
 export const TableSettings = ({
@@ -20,6 +22,8 @@ export const TableSettings = ({
   setPadding,
   nodeSign,
   setNodeSign,
+  decimal,
+  setDecimal,
 }: TableSettingsProps) => {
   return (
     <div className='flex flex-col gap-2'>
@@ -67,6 +71,19 @@ export const TableSettings = ({
         </Button>
         <Button onClick={() => setNodeSign('')} disabled={nodeSign === ''} className='bg-lime-600'>
           No sign
+        </Button>
+      </div>
+
+      <div>How many decimal do you need:</div>
+      <div className='flex gap-2'>
+        <Button onClick={() => setDecimal(0)} disabled={decimal === 0} className='bg-lime-600'>
+          0
+        </Button>
+        <Button onClick={() => setDecimal(1)} disabled={decimal === 1} className='bg-lime-600'>
+          1
+        </Button>
+        <Button onClick={() => setDecimal(2)} disabled={decimal === 2} className='bg-lime-600'>
+          2
         </Button>
       </div>
 
