@@ -7,10 +7,11 @@ export const App = () => {
   const [showTotal, setShowTotal] = useState(true);
   const [years, setYears] = useState(1);
   const [padding, setPadding] = useState(20);
+  const [nodeSign, setNodeSign] = useState('⌵ ');
 
   return (
     <>
-      <div className='width-full height-full flex justify-center gap-2 p-4'>
+      <div className='width-full height-full flex flex-col justify-center gap-2 p-4 sm:flex-row'>
         <Card className='basis-1/4'>
           <CardHeader>
             <CardTitle>Settings</CardTitle>
@@ -24,6 +25,8 @@ export const App = () => {
               setYears={setYears}
               padding={padding}
               setPadding={setPadding}
+              nodeSign={nodeSign}
+              setNodeSign={setNodeSign}
             />
           </CardContent>
         </Card>
@@ -39,6 +42,7 @@ export const App = () => {
               showTotal={showTotal}
               yearsGenerated={years}
               paddingSize={padding}
+              nodeSign={nodeSign}
             />
           </CardContent>
         </Card>
