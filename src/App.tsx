@@ -5,8 +5,8 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './com
 
 export const App = () => {
   const [showTotal, setShowTotal] = useState(true);
-  const [years, setYears] = useState(200);
-  const [padding, setPadding] = useState(200);
+  const [years, setYears] = useState(1);
+  const [padding, setPadding] = useState(20);
 
   return (
     <>

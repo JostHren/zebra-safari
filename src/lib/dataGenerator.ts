@@ -23,7 +23,6 @@ const generateLargeHierarchicalData = (generatedYears: number) => {
     return months[monthNumber] || 'Unk';
   };
 
-  console.log('Start data generation');
   const data = {
     Total: [],
   };
@@ -93,6 +92,5 @@ export const generateData = (generatedYears: number) => {
       return null;
     },
   );
-  console.log('GENERATED DATA!');
   return root;
 };
