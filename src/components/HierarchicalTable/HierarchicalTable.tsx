@@ -1,4 +1,7 @@
+import { Filters } from '@/App';
 import { useTable } from '@/hooks/useTable';
+import { generateData } from '@/lib/dataGenerator';
+import { filterData } from '@/lib/filters';
 
 export interface HierarchicalTableProps {
   showTotal?: boolean;
@@ -6,6 +9,7 @@ export interface HierarchicalTableProps {
   paddingSize?: number;
   nodeSign?: string;
   yearsGenerated?: number;
+  filters: Filters;
 }
 
 export const HierarchicalTable = ({
@@ -14,20 +18,24 @@ export const HierarchicalTable = ({
   paddingSize = 20,
   nodeSign = '⌵ ',
   yearsGenerated = 200,
+  filters,
 }: HierarchicalTableProps) => {
+  const rawData = generateData(yearsGenerated);
+  const data = filterData(rawData, filters);
+
   const { tableRef } = useTable({
     showTotal,
     decimalPlaces,
     paddingSize,
     nodeSign,
-    yearsGenerated,
+    data,
   });
 
   return (
-    <>
+    <div className='flex flex-row'>
       <table className={'w-[260px] border-separate border-spacing-x-4'}>
         <tbody ref={tableRef}></tbody>
       </table>
-    </>
+    </div>
   );
 };

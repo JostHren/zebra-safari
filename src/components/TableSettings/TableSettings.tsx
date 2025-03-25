@@ -1,4 +1,7 @@
+import { Filters } from '@/App';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface TableSettingsProps {
   showTotal: boolean;
@@ -11,6 +14,8 @@ interface TableSettingsProps {
   setNodeSign: (node: string) => void;
   decimal: number;
   setDecimal: (decimal: number) => void;
+  filters: Filters;
+  setFilters: (filters: Filters) => void;
 }
 
 export const TableSettings = ({
@@ -24,6 +29,8 @@ export const TableSettings = ({
   setNodeSign,
   decimal,
   setDecimal,
+  filters,
+  setFilters,
 }: TableSettingsProps) => {
   return (
     <div className='flex flex-col gap-2'>
@@ -39,6 +46,42 @@ export const TableSettings = ({
           200 Years
         </Button>
       </div>
+
+      <div className='flex flex-row justify-between'>
+        <div>Define filters:</div>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className='w-10 cursor-pointer rounded-full border bg-amber-400 text-center text-xs'>
+                info
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              Seprate filters on the same level with space. <br />
+              For example: 1980 1982 <br /> <br />
+              Filters on the same level act as OR operator.
+              <br /> Filters between levels act as AND operator.
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+
+      <Input
+        placeholder='First level'
+        value={filters.first}
+        onChange={(e) => setFilters({ ...filters, first: e.target.value })}
+      />
+      <Input
+        placeholder='Second level'
+        value={filters.second}
+        onChange={(e) => setFilters({ ...filters, second: e.target.value })}
+      />
+      <Input
+        placeholder='Third level'
+        value={filters.third}
+        onChange={(e) => setFilters({ ...filters, third: e.target.value })}
+      />
 
       <div>How much padding do you need:</div>
       <div className='flex gap-2'>

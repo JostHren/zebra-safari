@@ -1,4 +1,5 @@
-import { generateData } from '@/lib/dataGenerator';
+import { DeepData, HierarchyNode } from '@/lib/dataGenerator';
+import { transformToHierarchy } from '@/lib/transformToHierarchy';
 import * as d3 from 'd3';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
@@ -13,7 +14,7 @@ export interface HierarchicalTableProps {
   decimalPlaces?: number;
   paddingSize?: number;
   nodeSign?: string;
-  yearsGenerated?: number;
+  data: DeepData;
 }
 
 export const useTable = ({
@@ -21,10 +22,20 @@ export const useTable = ({
   decimalPlaces = 1,
   paddingSize = 20,
   nodeSign = '⌵ ',
-  yearsGenerated = 200,
+  data,
 }: HierarchicalTableProps) => {
+  // const start = Date.now();
+
   const tableRef = useRef<HTMLTableSectionElement>(null);
-  const root = useMemo(() => generateData(yearsGenerated), [yearsGenerated]);
+
+  const root = useMemo(() => {
+    const transformedData = transformToHierarchy(data);
+
+    return d3.hierarchy(transformedData, (node: HierarchyNode) => {
+      if (node.children) return node.children;
+      return null;
+    });
+  }, [data]);
 
   root.each((node: d3.HierarchyNode<HierarchyNodeData>) => {
     if (!node.children) {
@@ -39,32 +50,6 @@ export const useTable = ({
       const sum = d3.sum(node.children, (d) => d.data.value ?? 0);
       node.data.value = Number(sum.toFixed(decimalPlaces));
     }
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateAllChildNodes = (parentNode: d3.HierarchyNode<HierarchyNodeData>) => {
-    // Get all leaf nodes under this parent
-    const leafNodes: d3.HierarchyNode<HierarchyNodeData>[] = [];
-    const collectLeafNodes = (node: d3.HierarchyNode<HierarchyNodeData>) => {
-      if (!node.children) {
-        leafNodes.push(node);
-      } else {
-        node.children.forEach(collectLeafNodes);
-      }
-    };
-    collectLeafNodes(parentNode);
-
-    // Cycle through states for all leaf nodes
-    leafNodes.forEach((leafNode) => {
-      if (leafNode.data.state === 0) {
-        leafNode.data.state = 2;
-      } else if (leafNode.data.state === 2) {
-        leafNode.data.state = 1;
-      } else {
-        leafNode.data.state = 0;
-      }
-      updateValues(leafNode);
-    });
   };
 
   // Compute initial values for branches
@@ -105,6 +90,34 @@ export const useTable = ({
       }
     },
     [decimalPlaces],
+  );
+
+  const updateAllChildNodes = useCallback(
+    (parentNode: d3.HierarchyNode<HierarchyNodeData>) => {
+      // Get all leaf nodes under this parent
+      const leafNodes: d3.HierarchyNode<HierarchyNodeData>[] = [];
+      const collectLeafNodes = (node: d3.HierarchyNode<HierarchyNodeData>) => {
+        if (!node.children) {
+          leafNodes.push(node);
+        } else {
+          node.children.forEach(collectLeafNodes);
+        }
+      };
+      collectLeafNodes(parentNode);
+
+      // Cycle through states for all leaf nodes
+      leafNodes.forEach((leafNode) => {
+        if (leafNode.data.state === 0) {
+          leafNode.data.state = 2;
+        } else if (leafNode.data.state === 2) {
+          leafNode.data.state = 1;
+        } else {
+          leafNode.data.state = 0;
+        }
+        updateValues(leafNode);
+      });
+    },
+    [updateValues],
   );
 
   useEffect(() => {
@@ -190,8 +203,11 @@ export const useTable = ({
     // Compute initial values and render
     renderTable();
 
+    //console.log('Render time', Date.now() - start);
+
     // Cleanup function
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       d3.select(tableRef.current).selectAll('tr').remove();
     };
   }, [decimalPlaces, nodeSign, paddingSize, root, showTotal, updateAllChildNodes, updateValues]);

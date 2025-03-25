@@ -3,12 +3,23 @@ import { HierarchicalTable } from './components/HierarchicalTable/HierarchicalTa
 import { TableSettings } from './components/TableSettings/TableSettings';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './components/ui/card';
 
+export interface Filters {
+  first: string;
+  second: string;
+  third: string;
+}
+
 export const App = () => {
   const [showTotal, setShowTotal] = useState(true);
   const [years, setYears] = useState(1);
   const [padding, setPadding] = useState(20);
   const [nodeSign, setNodeSign] = useState('⌵ ');
   const [decimal, setDecimal] = useState(1);
+  const [filters, setFilters] = useState({
+    first: '',
+    second: '',
+    third: '',
+  });
 
   return (
     <>
@@ -30,6 +41,8 @@ export const App = () => {
               setNodeSign={setNodeSign}
               decimal={decimal}
               setDecimal={setDecimal}
+              filters={filters}
+              setFilters={setFilters}
             />
           </CardContent>
         </Card>
@@ -47,7 +60,9 @@ export const App = () => {
               paddingSize={padding}
               nodeSign={nodeSign}
               decimalPlaces={decimal}
+              filters={filters}
             />
+            {/* <NewTable data={data} /> */}
           </CardContent>
         </Card>
       </div>
