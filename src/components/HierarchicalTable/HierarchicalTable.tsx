@@ -1,6 +1,6 @@
 import { Filters, FontFamily } from '@/App';
 import { useTable } from '@/hooks/useTable';
-import { generateData } from '@/lib/dataGenerator';
+import { DeepData } from '@/lib/dataGenerator';
 import { filterData } from '@/lib/filters';
 import clsx from 'clsx';
 
@@ -9,26 +9,23 @@ export interface HierarchicalTableProps {
   decimalPlaces?: number;
   paddingSize?: number;
   nodeSign?: string;
-  yearsGenerated?: number;
   filters: Filters;
   fontFamily: FontFamily;
+  rawData: DeepData;
 }
 
 export const HierarchicalTable = ({
   showTotal = true,
-  decimalPlaces = 1,
   paddingSize = 20,
   nodeSign = '⌵ ',
-  yearsGenerated = 200,
   filters,
   fontFamily,
+  rawData,
 }: HierarchicalTableProps) => {
-  const rawData = generateData(yearsGenerated);
   const data = filterData(rawData, filters);
 
   const { tableRef } = useTable({
     showTotal,
-    decimalPlaces,
     paddingSize,
     nodeSign,
     data,

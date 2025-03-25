@@ -11,7 +11,6 @@ interface HierarchyNodeData {
 
 export interface HierarchicalTableProps {
   showTotal?: boolean;
-  decimalPlaces?: number;
   paddingSize?: number;
   nodeSign?: string;
   data: DeepData;
@@ -19,7 +18,6 @@ export interface HierarchicalTableProps {
 
 export const useTable = ({
   showTotal = true,
-  decimalPlaces = 1,
   paddingSize = 20,
   nodeSign = '⌵ ',
   data,
@@ -56,41 +54,38 @@ export const useTable = ({
   computeBranchValues(root);
 
   // Function to update values in hierarchy
-  const updateValues = useCallback(
-    (node: d3.HierarchyNode<HierarchyNodeData>) => {
-      // Update clicked node's value display
+  const updateValues = useCallback((node: d3.HierarchyNode<HierarchyNodeData>) => {
+    // Update clicked node's value display
+    d3.selectAll('tr')
+      .filter((d) => d === node)
+      .select('.value-cell')
+      .text((node.data.value ?? 0).toString())
+      .classed('text-red-500', node.data.state === 1)
+      .classed('text-gray-300', node.data.state === 2);
+
+    // Apply styling for excluded values
+    d3.selectAll('tr')
+      .filter((d) => d === node)
+      .select('.leaf')
+      .classed('text-red-500 before:content-["-_"]', node.data.state === 1)
+      .classed('text-gray-300', node.data.state === 2);
+
+    // Recursively update parent values
+    let parent = node.parent;
+    while (parent && parent.children) {
+      const sum = d3.sum(parent.children, (d) => {
+        if (d.data.state === 1) return -(d.data.value ?? 0);
+        if (d.data.state === 2) return 0;
+        return d.data.value ?? 0;
+      });
+      parent.data.value = Number(sum.toFixed(4));
       d3.selectAll('tr')
-        .filter((d) => d === node)
+        .filter((d) => d === parent)
         .select('.value-cell')
-        .text((node.data.value ?? 0).toString())
-        .classed('text-red-500', node.data.state === 1)
-        .classed('text-gray-300', node.data.state === 2);
-
-      // Apply styling for excluded values
-      d3.selectAll('tr')
-        .filter((d) => d === node)
-        .select('.leaf')
-        .classed('text-red-500 before:content-["-_"]', node.data.state === 1)
-        .classed('text-gray-300', node.data.state === 2);
-
-      // Recursively update parent values
-      let parent = node.parent;
-      while (parent && parent.children) {
-        const sum = d3.sum(parent.children, (d) => {
-          if (d.data.state === 1) return -(d.data.value ?? 0);
-          if (d.data.state === 2) return 0;
-          return d.data.value ?? 0;
-        });
-        parent.data.value = Number(sum.toFixed(decimalPlaces));
-        d3.selectAll('tr')
-          .filter((d) => d === parent)
-          .select('.value-cell')
-          .text((parent.data.value ?? 0).toString());
-        parent = parent.parent;
-      }
-    },
-    [decimalPlaces],
-  );
+        .text((parent.data.value ?? 0).toString());
+      parent = parent.parent;
+    }
+  }, []);
 
   const updateAllChildNodes = useCallback(
     (parentNode: d3.HierarchyNode<HierarchyNodeData>) => {
@@ -210,7 +205,7 @@ export const useTable = ({
       // eslint-disable-next-line react-hooks/exhaustive-deps
       d3.select(tableRef.current).selectAll('tr').remove();
     };
-  }, [decimalPlaces, nodeSign, paddingSize, root, showTotal, updateAllChildNodes, updateValues]);
+  }, [nodeSign, paddingSize, root, showTotal, updateAllChildNodes, updateValues]);
 
   return { tableRef };
 };

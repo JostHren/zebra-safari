@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { HierarchicalTable } from './components/HierarchicalTable/HierarchicalTable';
 import { TableSettings } from './components/TableSettings/TableSettings';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './components/ui/card';
+import { generateData } from './lib/dataGenerator';
 
 export interface Filters {
   first: string;
@@ -11,18 +12,30 @@ export interface Filters {
 
 export type FontFamily = 'sans' | 'mono' | 'serif';
 
+const isValidJSON = (str: string) => {
+  try {
+    const parse = JSON.parse(str);
+    return parse;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_e: unknown) {
+    return undefined;
+  }
+};
+
 export const App = () => {
   const [showTotal, setShowTotal] = useState(true);
   const [years, setYears] = useState(1);
   const [padding, setPadding] = useState(20);
   const [nodeSign, setNodeSign] = useState('⌵ ');
-  const [decimal, setDecimal] = useState(1);
+  const [inputData, setInputData] = useState<string>('');
   const [fontFamiliy, setFontFamily] = useState<FontFamily>('sans');
   const [filters, setFilters] = useState({
     first: '',
     second: '',
     third: '',
   });
+
+  const rawData = isValidJSON(inputData) ?? generateData(years);
 
   return (
     <>
@@ -42,12 +55,12 @@ export const App = () => {
               setPadding={setPadding}
               nodeSign={nodeSign}
               setNodeSign={setNodeSign}
-              decimal={decimal}
-              setDecimal={setDecimal}
               filters={filters}
               setFilters={setFilters}
               fontFamily={fontFamiliy}
               setFontFamily={setFontFamily}
+              inputData={inputData}
+              setInputData={setInputData}
             />
           </CardContent>
         </Card>
@@ -61,14 +74,12 @@ export const App = () => {
             <HierarchicalTable
               key={'true'}
               showTotal={showTotal}
-              yearsGenerated={years}
+              rawData={rawData}
               paddingSize={padding}
               nodeSign={nodeSign}
-              decimalPlaces={decimal}
               fontFamily={fontFamiliy}
               filters={filters}
             />
-            {/* <NewTable data={data} /> */}
           </CardContent>
         </Card>
       </div>

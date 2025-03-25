@@ -1,6 +1,6 @@
 import { DeepData, HierarchyNode } from './dataGenerator';
 
-export const transformToHierarchy = (data: DeepData, rootName: string = 'Total'): HierarchyNode => {
+export const transformToHierarchy = (data: DeepData): HierarchyNode => {
   const processNode = (node: DeepData): HierarchyNode | null => {
     // Handle leaf nodes (nodes with numeric values)
     if (typeof node === 'number') {
@@ -44,11 +44,11 @@ export const transformToHierarchy = (data: DeepData, rootName: string = 'Total')
 
   // Handle root level
   return {
-    name: rootName,
-    children: Array.isArray(data.Total)
-      ? data.Total.map((node) => processNode(node)).filter(
-          (node): node is HierarchyNode => node !== null,
-        )
+    name: Object.keys(data)[0],
+    children: Array.isArray(Object.values(data)[0])
+      ? (Object.values(data)[0] as DeepData[])
+          .map((node) => processNode(node))
+          .filter((node): node is HierarchyNode => node !== null)
       : [],
   };
 };
