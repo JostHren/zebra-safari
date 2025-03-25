@@ -9,12 +9,15 @@ export interface Filters {
   third: string;
 }
 
+export type FontFamily = 'sans' | 'mono' | 'serif';
+
 export const App = () => {
   const [showTotal, setShowTotal] = useState(true);
   const [years, setYears] = useState(1);
   const [padding, setPadding] = useState(20);
   const [nodeSign, setNodeSign] = useState('⌵ ');
   const [decimal, setDecimal] = useState(1);
+  const [fontFamiliy, setFontFamily] = useState<FontFamily>('sans');
   const [filters, setFilters] = useState({
     first: '',
     second: '',
@@ -43,6 +46,8 @@ export const App = () => {
               setDecimal={setDecimal}
               filters={filters}
               setFilters={setFilters}
+              fontFamily={fontFamiliy}
+              setFontFamily={setFontFamily}
             />
           </CardContent>
         </Card>
@@ -60,6 +65,7 @@ export const App = () => {
               paddingSize={padding}
               nodeSign={nodeSign}
               decimalPlaces={decimal}
+              fontFamily={fontFamiliy}
               filters={filters}
             />
             {/* <NewTable data={data} /> */}

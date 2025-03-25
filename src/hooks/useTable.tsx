@@ -48,7 +48,7 @@ export const useTable = ({
     if (node.children) {
       node.children.forEach(computeBranchValues);
       const sum = d3.sum(node.children, (d) => d.data.value ?? 0);
-      node.data.value = Number(sum.toFixed(decimalPlaces));
+      node.data.value = Number(sum.toFixed(4));
     }
   };
 

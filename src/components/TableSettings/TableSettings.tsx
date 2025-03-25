@@ -1,4 +1,4 @@
-import { Filters } from '@/App';
+import { Filters, FontFamily } from '@/App';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
@@ -16,6 +16,8 @@ interface TableSettingsProps {
   setDecimal: (decimal: number) => void;
   filters: Filters;
   setFilters: (filters: Filters) => void;
+  fontFamily: FontFamily;
+  setFontFamily: (fontFamily: FontFamily) => void;
 }
 
 export const TableSettings = ({
@@ -31,6 +33,8 @@ export const TableSettings = ({
   setDecimal,
   filters,
   setFilters,
+  fontFamily,
+  setFontFamily,
 }: TableSettingsProps) => {
   return (
     <div className='flex flex-col gap-2'>
@@ -127,6 +131,31 @@ export const TableSettings = ({
         </Button>
         <Button onClick={() => setDecimal(2)} disabled={decimal === 2} className='bg-lime-600'>
           2
+        </Button>
+      </div>
+
+      <div>Set font-family:</div>
+      <div className='flex gap-2'>
+        <Button
+          onClick={() => setFontFamily('serif')}
+          disabled={fontFamily === 'serif'}
+          className='bg-lime-600'
+        >
+          Serif
+        </Button>
+        <Button
+          onClick={() => setFontFamily('mono')}
+          disabled={fontFamily === 'mono'}
+          className='bg-lime-600'
+        >
+          Mono
+        </Button>
+        <Button
+          onClick={() => setFontFamily('sans')}
+          disabled={fontFamily === 'sans'}
+          className='bg-lime-600'
+        >
+          Sans
         </Button>
       </div>
 
