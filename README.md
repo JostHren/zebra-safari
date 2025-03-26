@@ -1,54 +1,101 @@
-# React + TypeScript + Vite
+# Zebra Safari
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Zebra Safari is a simple React application designed to visualize data as a table. It uses tools like D3.js for data manipulation, React for the user interface, Shadcn for UI components, and Cypress for testing.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React**: For building the UI components.
+- **D3.js**: For data visualization and manipulation.
+- **Shadcn**: For reusable UI components.
+- **Cypress**: For end-to-end (E2E) testing.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Running the App with Docker
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+To run the app in a Docker container, use the following command:
+
+```bash
+make docker/frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This comand will run app in dev mode. It should be accessible via: [http://localhost:5173/](http://localhost:5173/)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+### Using App
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+On the first run, some data will be genereated.
+Users can then manipulate this data by clicking on the table rows.
+
+In the settings section output can be customized a bit.
+
+Users can also input own data by clicking on the Switch toggle and pasting valid data to input field.
+
+## Run App Locally
+
+### Run Dev
+
+First install dependencies:
+
+```bash
+make setup
 ```
+
+Then:
+
+```bash
+make run/dev
+```
+
+Open app in web browser.
+
+### Run Preview
+
+First create build:
+
+```bash
+make build
+```
+
+Then:
+
+```bash
+make preview
+```
+
+Open app in web browser.
+
+## Tests
+
+To run tests:
+
+```bash
+make run/tests
+```
+
+## E2E tests
+
+First run:
+
+```bash
+make e2e/setup
+```
+
+Then
+
+```bash
+make e2e/run
+```
+
+E2E tests should pass.
+
+If visible change is made to the app, tests should fail.
+Diff images can be found in /e2e/cypress/screenshots/diff folder.
+
+Diff image highlights changes betweeen reference and actual image.
+
+Example of reference screenshoot of this app:
+![Reference-Image](e2e/cypress/reference-screenshots/basic/filters.spec.ts/filters%20--%20should%20apply%20filters%20[mobile-size].png 'Reference')
+
+## Other
+
+Check Makefile for more useful commands.

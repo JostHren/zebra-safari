@@ -13,6 +13,12 @@ setup: ## Install package dependencies
 run/dev : ## Run the application in development environment
 	pnpm run dev
 
+build : ## Run the application in development environment
+	pnpm run build
+
+serve : ## Run the application in development environment
+	pnpm run preview
+
 docker/frontend: ## Run the frontend in docker environment
 	docker-compose up --build react-app -d
 
