@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test:unit": "vitest --run",
+    "test:format": "prettier --check .",
+    "test:format:fix": "prettier --write .",
+    "test": "pnpm test:unit && pnpm test:format"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
