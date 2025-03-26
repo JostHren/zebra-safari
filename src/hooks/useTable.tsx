@@ -1,12 +1,20 @@
-import { DeepData, HierarchyNode } from '@/lib/dataGenerator';
 import { transformToHierarchy } from '@/lib/transformToHierarchy';
 import * as d3 from 'd3';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
+export interface DeepData {
+  [key: string]: DeepData | DeepData[] | number;
+}
+
+export interface HierarchyNode {
+  name: string;
+  children?: HierarchyNode[];
+  value?: number;
+}
 interface HierarchyNodeData {
   name: string;
   value?: number;
-  state?: 0 | 1 | 2; // 0 = Original, 1 = Inverted, 2 = Excluded
+  state?: 'original' | 'inverted' | 'excluded';
 }
 
 export interface HierarchicalTableProps {
@@ -22,8 +30,6 @@ export const useTable = ({
   nodeSign = '⌵ ',
   data,
 }: HierarchicalTableProps) => {
-  // const start = Date.now();
-
   const tableRef = useRef<HTMLTableSectionElement>(null);
 
   const root = useMemo(() => {
@@ -37,7 +43,7 @@ export const useTable = ({
 
   root.each((node: d3.HierarchyNode<HierarchyNodeData>) => {
     if (!node.children) {
-      node.data.state = 0; // 0 = Original, 1 = Inverted, 2 = Excluded
+      node.data.state = 'original';
     }
   });
 
@@ -60,22 +66,22 @@ export const useTable = ({
       .filter((d) => d === node)
       .select('.value-cell')
       .text((node.data.value ?? 0).toString())
-      .classed('text-red-500', node.data.state === 1)
-      .classed('text-gray-300', node.data.state === 2);
+      .classed('text-red-500', node.data.state === 'inverted')
+      .classed('text-gray-300', node.data.state === 'excluded');
 
     // Apply styling for excluded values
     d3.selectAll('tr')
       .filter((d) => d === node)
       .select('.leaf')
-      .classed('text-red-500 before:content-["-_"]', node.data.state === 1)
-      .classed('text-gray-300', node.data.state === 2);
+      .classed('text-red-500 before:content-["-_"]', node.data.state === 'inverted')
+      .classed('text-gray-300', node.data.state === 'excluded');
 
     // Recursively update parent values
     let parent = node.parent;
     while (parent && parent.children) {
       const sum = d3.sum(parent.children, (d) => {
-        if (d.data.state === 1) return -(d.data.value ?? 0);
-        if (d.data.state === 2) return 0;
+        if (d.data.state === 'inverted') return -(d.data.value ?? 0);
+        if (d.data.state === 'excluded') return 0;
         return d.data.value ?? 0;
       });
       parent.data.value = Number(sum.toFixed(4));
@@ -102,12 +108,12 @@ export const useTable = ({
 
       // Cycle through states for all leaf nodes
       leafNodes.forEach((leafNode) => {
-        if (leafNode.data.state === 0) {
-          leafNode.data.state = 2;
-        } else if (leafNode.data.state === 2) {
-          leafNode.data.state = 1;
+        if (leafNode.data.state === 'original') {
+          leafNode.data.state = 'excluded';
+        } else if (leafNode.data.state === 'excluded') {
+          leafNode.data.state = 'inverted';
         } else {
-          leafNode.data.state = 0;
+          leafNode.data.state = 'original';
         }
         updateValues(leafNode);
       });
@@ -118,12 +124,12 @@ export const useTable = ({
   useEffect(() => {
     // Function to cycle leaf values (Original → Inverted → Excluded)
     const cycleValue = (node: d3.HierarchyNode<HierarchyNodeData>) => {
-      if (node.data.state === 0) {
-        node.data.state = 2;
-      } else if (node.data.state === 2) {
-        node.data.state = 1;
+      if (node.data.state === 'original') {
+        node.data.state = 'excluded';
+      } else if (node.data.state === 'excluded') {
+        node.data.state = 'inverted';
       } else {
-        node.data.state = 0;
+        node.data.state = 'original';
       }
 
       updateValues(node);
@@ -181,7 +187,7 @@ export const useTable = ({
         .classed('select-none border-b-1', true)
         .on('click', (_event, d) => {
           if (d.children) {
-            //do nothing
+            updateAllChildNodes(d);
           } else {
             cycleValue(d);
           }
@@ -190,15 +196,10 @@ export const useTable = ({
       // Update existing rows
       rows.select('.toggle').text((d) => `${nodeSign} ${d.data.name}`);
       rows.select('.value-cell').text((d) => (d.data.value ?? 0).toString());
-
-      // Remove old rows
-      rows.exit().remove();
     };
 
     // Compute initial values and render
     renderTable();
-
-    //console.log('Render time', Date.now() - start);
 
     // Cleanup function
     return () => {

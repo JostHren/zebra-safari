@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { HierarchicalTable } from './components/HierarchicalTable/HierarchicalTable';
 import { TableSettings } from './components/TableSettings/TableSettings';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from './components/ui/card';
-import { generateData } from './lib/dataGenerator';
+import { generateLargeHierarchicalData } from './lib/dataGenerator';
+import { isValidJSON } from './lib/utils';
 
 export interface Filters {
   first: string;
@@ -11,16 +12,6 @@ export interface Filters {
 }
 
 export type FontFamily = 'sans' | 'mono' | 'serif';
-
-const isValidJSON = (str: string) => {
-  try {
-    const parse = JSON.parse(str);
-    return parse;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (_e: unknown) {
-    return undefined;
-  }
-};
 
 export const App = () => {
   const [showTotal, setShowTotal] = useState(true);
@@ -35,7 +26,7 @@ export const App = () => {
     third: '',
   });
 
-  const rawData = isValidJSON(inputData) ?? generateData(years);
+  const rawData = isValidJSON(inputData) ?? generateLargeHierarchicalData(years);
 
   return (
     <>

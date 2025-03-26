@@ -1,4 +1,4 @@
-import { DeepData, HierarchyNode } from './dataGenerator';
+import { DeepData, HierarchyNode } from '@/hooks/useTable';
 
 export const transformToHierarchy = (data: DeepData): HierarchyNode => {
   const processNode = (node: DeepData): HierarchyNode | null => {

@@ -1,6 +1,5 @@
 import { Filters, FontFamily } from '@/App';
-import { useTable } from '@/hooks/useTable';
-import { DeepData } from '@/lib/dataGenerator';
+import { DeepData, useTable } from '@/hooks/useTable';
 import { filterData } from '@/lib/filters';
 import clsx from 'clsx';
 

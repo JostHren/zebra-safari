@@ -1,5 +1,5 @@
 import { Filters } from '@/App';
-import { DeepData } from './dataGenerator';
+import { DeepData } from '@/hooks/useTable';
 
 export const filterDeepData = (
   data: DeepData,

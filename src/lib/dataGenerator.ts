@@ -1,12 +1,4 @@
-export interface DeepData {
-  [key: string]: DeepData | DeepData[] | number;
-}
-
-export interface HierarchyNode {
-  name: string;
-  children?: HierarchyNode[];
-  value?: number;
-}
+import { DeepData } from '@/hooks/useTable';
 
 export const generateLargeHierarchicalData = (generatedYears: number): DeepData => {
   const getMonth = (monthNumber: number): string => {
@@ -68,10 +60,4 @@ export const generateLargeHierarchicalData = (generatedYears: number): DeepData 
   }
 
   return data;
-};
-
-export const generateData = (generatedYears: number): DeepData => {
-  const generatedData = generateLargeHierarchicalData(generatedYears);
-
-  return generatedData;
 };

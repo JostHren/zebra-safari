@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Switch } from '../ui/switch';
 import clsx from 'clsx';
 
-const VALID_FORMAT_EXAMPLE = '{"root": [{"a":[{"b":2}, {"c":3}]}, {"d":3}]}';
+const VALID_FORMAT_EXAMPLE = '{"root": [{"a":[{"b":2}, {"c":3}]}, {"d":4}]}';
 
 interface TableSettingsProps {
   showTotal: boolean;
@@ -52,6 +52,7 @@ export const TableSettings = ({
   return (
     <TooltipProvider>
       <div className='flex flex-col gap-2'>
+        {/* Data Generation section */}
         <div className={clsx({ ['text-gray-400']: !generateData })}>
           How many years should I generate:
         </div>
@@ -88,6 +89,7 @@ export const TableSettings = ({
           {' Data generation enabled'}
         </div>
 
+        {/* Data Input section */}
         <div className='flex flex-row justify-between'>
           <div className={clsx({ ['text-gray-400']: generateData })}>Input Data instead:</div>
           <Tooltip>
@@ -113,9 +115,9 @@ export const TableSettings = ({
           disabled={generateData}
         />
 
+        {/* Filters section */}
         <div className='flex flex-row justify-between'>
           <div>Define filters:</div>
-
           <Tooltip>
             <TooltipTrigger>
               <div className='w-10 cursor-pointer rounded-full border bg-amber-400 text-center text-xs'>
@@ -145,6 +147,8 @@ export const TableSettings = ({
           value={filters.third}
           onChange={(e) => setFilters({ ...filters, third: e.target.value })}
         />
+
+        {/* Padding section */}
         <div>How much padding do you need:</div>
         <div className='flex gap-2'>
           <Button onClick={() => setPadding(0)} disabled={padding === 0} className='bg-lime-600'>
@@ -157,6 +161,8 @@ export const TableSettings = ({
             40 px
           </Button>
         </div>
+
+        {/* Sign section */}
         <div>What node sign do you like:</div>
         <div className='flex gap-2'>
           <Button
@@ -182,6 +188,7 @@ export const TableSettings = ({
           </Button>
         </div>
 
+        {/* Font Family section */}
         <div>Set font-family:</div>
         <div className='flex gap-2'>
           <Button
@@ -206,6 +213,8 @@ export const TableSettings = ({
             Sans
           </Button>
         </div>
+
+        {/* Total section */}
         <div>Do you want to see total:</div>
         <div className='flex gap-2'>
           <Button onClick={() => setShowTotal(true)} disabled={showTotal} className='bg-lime-600'>
