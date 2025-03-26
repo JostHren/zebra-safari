@@ -1,0 +1,12 @@
+node_modules
+screenshots
+videos
+.DS_Store
+results
+
+# confidential fixtures
+cypress/fixtures/iota/csp-secrets.json
+cypress/fixtures/connections/config.json
+
+# Generated files
+**/generated/**

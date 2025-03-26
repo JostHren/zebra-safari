@@ -1,0 +1,4 @@
+generate-screenshots/*
+.yarn
+.pnp.*
+cypress/support/models/generated

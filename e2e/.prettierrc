@@ -1,0 +1,43 @@
+{
+  "overrides": [
+    {
+      "files": "*.ts, *.js",
+      "options": {
+        "parser": "typescript"
+      }
+    },
+    {
+      "files": "*.css, *.less",
+      "options": {
+        "parser": "less"
+      }
+    },
+    {
+      "files": "*.json",
+      "options": {
+        "parser": "json"
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    },
+    {
+      "files": "*.md",
+      "options": {
+        "parser": "markdown"
+      }
+    }
+  ],
+  "useTabs": false,
+  "tabWidth": 2,
+  "printWidth": 120,
+  "singleQuote": true,
+  "semi": true,
+  "bracketSpacing": true,
+  "trailingComma": "all",
+  "arrowParens": "avoid",
+  "endOfLine": "lf"
+}

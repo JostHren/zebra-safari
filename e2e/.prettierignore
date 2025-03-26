@@ -1,0 +1,6 @@
+Makefile
+package-lock.json
+generate-screenshots/.gitlab-ci.template.yml
+.yarn
+.pnp.*
+cypress/support/models/generated

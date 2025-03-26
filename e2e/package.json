@@ -1,0 +1,40 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "scripts": {
+    "run:cypress": "cypress run --headless --browser electron --spec \"./cypress/integration/$CYPRESS_SPEC_FILE.spec.ts\"",
+    "run:cypress:watch": "cypress open --e2e",
+    "test:static": "npm run test:static:lint && npm run test:static:format",
+    "test:static:fix": "npm run test:static:lint:fix && npm run format",
+    "test:static:lint": "eslint . --ext .ts,.js",
+    "test:static:format": "prettier --check --ignore-unknown '**/*'",
+    "format": "prettier --write --ignore-unknown '**/*'",
+    "test:static:lint:fix": "eslint . --ext .ts,.js --fix",
+    "test:typescript": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "22.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.12.0",
+    "@types/pixelmatch": "5.2.6",
+    "@types/pngjs": "6.0.5",
+    "@typescript-eslint/eslint-plugin": "8.22.0",
+    "@typescript-eslint/parser": "8.22.0",
+    "cypress": "14.0.1",
+    "cypress-fail-fast": "7.1.1",
+    "cypress-multi-reporters": "2.0.5",
+    "cypress-terminal-report": "7.1.0",
+    "eslint": "9.19.0",
+    "eslint-config-prettier": "10.0.1",
+    "eslint-plugin-cypress": "4.1.0",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-mocha": "10.5.0",
+    "path": "0.12.7",
+    "pixelmatch": "6.0.0",
+    "pngjs": "7.0.0",
+    "prettier": "3.4.2",
+    "superagent": "10.1.1",
+    "typescript": "5.7.3"
+  }
+}

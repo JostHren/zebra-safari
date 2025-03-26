@@ -1,0 +1,166 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": ["@3fs/eslint-config/configs/ts", "prettier", "plugin:cypress/recommended"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+      "plugins": ["@typescript-eslint", "import", "cypress", "mocha"],
+      "globals": {
+        "cypress/globals": true
+      },
+      "rules": {
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/prefer-readonly-parameter-types": "off",
+        "@typescript-eslint/no-unsafe-member-access": "error",
+        "@typescript-eslint/no-unsafe-call": "error",
+        "@typescript-eslint/restrict-template-expressions": "error",
+        "@typescript-eslint/explicit-function-return-type": ["error", { "allowExpressions": true }],
+        "@typescript-eslint/unbound-method": ["error", { "ignoreStatic": true }],
+        "@typescript-eslint/no-type-alias": "off",
+        "@typescript-eslint/comma-dangle": [
+          "error",
+          {
+            "arrays": "always-multiline",
+            "objects": "always-multiline",
+            "imports": "always-multiline",
+            "exports": "always-multiline",
+            "enums": "always-multiline",
+            "functions": "ignore"
+          }
+        ],
+        "max-params": 0,
+        "@typescript-eslint/no-extraneous-class": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "default",
+            "format": ["camelCase"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "variableLike",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "objectLiteralProperty",
+            "format": ["camelCase", "UPPER_CASE"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "enumMember",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "classProperty",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"]
+          },
+          {
+            "selector": "classMethod",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"],
+            "modifiers": ["static"]
+          }
+        ],
+
+        // typescript specific rules
+        "@typescript-eslint/member-ordering": [
+          "error",
+          {
+            "default": [
+              "public-field",
+              "protected-field",
+              "private-field",
+              "public-method",
+              "protected-method",
+              "private-method"
+            ]
+          }
+        ],
+        "@typescript-eslint/typedef": [
+          "error",
+          {
+            "arrayDestructuring": true,
+            "arrowParameter": true,
+            "memberVariableDeclaration": true,
+            "objectDestructuring": true,
+            "parameter": true,
+            "propertyDeclaration": true,
+            "variableDeclaration": true,
+            "variableDeclarationIgnoreFunction": true
+          }
+        ],
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "lines-between-class-members": "off",
+        "@typescript-eslint/lines-between-class-members": ["error", { "exceptAfterSingleLine": true }],
+        "@typescript-eslint/no-unnecessary-condition": "off",
+
+        "import/no-extraneous-dependencies": [
+          "off",
+          {
+            "optionalDependencies": false
+          }
+        ],
+
+        "@typescript-eslint/indent": "off",
+        "@typescript-eslint/space-before-function-paren": [
+          "error",
+          {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+          }
+        ],
+        "guard-for-in": "error",
+        "no-param-reassign": "error",
+        "no-sequences": "error",
+        "curly": ["error", "multi-line"],
+        "no-cond-assign": "error",
+        "no-duplicate-case": "error",
+        "no-template-curly-in-string": "error",
+        "use-isnan": "error",
+        "import/order": [
+          "error",
+          {
+            "groups": ["builtin", "external", "unknown", "internal", "parent", "sibling", "index"],
+            "newlines-between": "always"
+          }
+        ],
+        "max-nested-callbacks": ["error", 5]
+      }
+    },
+    {
+      "files": ["*.spec.ts"],
+      "rules": {
+        "max-lines-per-function": "off",
+        "mocha/no-exclusive-tests": "error",
+        "mocha/no-skipped-tests": "error"
+      }
+    },
+    {
+      "files": ["*.model.ts"],
+      "rules": {
+        "@typescript-eslint/naming-convention": "off"
+      }
+    },
+    {
+      "files": ["*.selector.ts"],
+      "rules": {
+        "max-classes-per-file": "off"
+      }
+    }
+  ]
+}
